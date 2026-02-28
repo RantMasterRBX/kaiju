@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaiju's Pages</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; margin: 0; }
+        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; width: 300px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; width: 100%; }
+        button:hover { background-color: #0056b3; }
+        #link-content { display: none; } /* Hidden by default */
+        ul { list-style: none; padding: 0; }
+        li { margin: 10px 0; }
+        a { color: #007bff; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="login-box" class="container">
+        <h2>Restricted Access</h2>
+        <input type="password" id="password" placeholder="Enter Password">
+        <button onclick="checkPassword()">Unlock</button>
+        <p id="error" style="color: red; font-size: 0.8rem; display: none;">Incorrect password.</p>
+    </div>
+
+    <div id="link-content" class="container">
+        <h2>My Links</h2>
+        <ul>
+            <li><a href="https://google.com" target="_blank">Search Engine</a></li>
+            <li><a href="https://github.com" target="_blank">GitHub Profile</a></li>
+            <li><a href="https://notion.so" target="_blank">Private Notes</a></li>
+        </ul>
+        <button onclick="location.reload()" style="background-color: #6c757d; margin-top: 10px;">Lock Page</button>
+    </div>
+
+    <script>
+        function checkPassword() {
+            const pass = document.getElementById('password').value;
+            // CHANGE YOUR PASSWORD HERE
+            const secret = "vokoscreenNG"; 
+
+            if (pass === secret) {
+                document.getElementById('login-box').style.display = 'none';
+                document.getElementById('link-content').style.display = 'block';
+            } else {
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+        
+        // Allow "Enter" key to submit
+        document.getElementById('password').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') { checkPassword(); }
+        });
+    </script>
+</body>
+</html>
