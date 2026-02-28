@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WinCell Project</title>
+    <style>
+        :root {
+            --accent: #0078d7; /* Classic Windows Blue */
+            --bg: #000000;
+            --tile-text: #ffffff;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: white;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* --- Boot Screen --- */
+        #boot-screen {
+            position: fixed; inset: 0;
+            background: black;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 1000;
+        }
+        .logo { width: 80px; height: 80px; background: var(--accent); margin-bottom: 20px; }
+        .loader { width: 30px; height: 30px; border: 3px solid #333; border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; }
+
+        /* --- Lock Screen --- */
+        #lock-screen {
+            position: fixed; inset: 0;
+            background: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80') center/cover;
+            z-index: 900;
+            display: flex; flex-direction: column;
+            justify-content: flex-end; padding: 40px;
+            transition: transform 0.5s cubic-bezier(0.1, 0.7, 0.1, 1);
+        }
+        #lock-screen.unlocked { transform: translateY(-100%); }
+        .time { font-size: 72px; font-weight: 100; margin-bottom: -10px; }
+        .date { font-size: 24px; font-weight: 300; opacity: 0.8; }
+
+        /* --- Home Screen --- */
+        #home-screen {
+            height: 100vh;
+            padding: 50px 20px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            box-sizing: border-box;
+            transition: transform 0.4s ease;
+        }
+
+        .tile {
+            background: var(--accent);
+            aspect-ratio: 1/1;
+            padding: 15px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .tile:active { transform: scale(0.95); }
+        .tile.wide { grid-column: span 2; aspect-ratio: 2/1; }
+
+        /* --- Navigation Bar --- */
+        #nav-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 50px; background: #000;
+            display: flex; justify-content: space-around; align-items: center;
+            z-index: 800; border-top: 1px solid #222;
+        }
+        .nav-btn { font-size: 20px; cursor: pointer; color: #888; }
+        .nav-btn:hover { color: white; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="boot-screen">
+        <div class="logo"></div>
+        <div class="loader"></div>
+    </div>
+
+    <div id="lock-screen" onclick="unlock()">
+        <div class="time" id="clock">12:00</div>
+        <div class="date">Friday, June 20</div>
+        <p style="margin-top: 20px; opacity: 0.6;">Tap to unlock</p>
+    </div>
+
+    <div id="home-screen">
+        <div class="tile wide">Photos</div>
+        <div class="tile">Phone</div>
+        <div class="tile">People</div>
+        <div class="tile">Messaging</div>
+        <div class="tile">Outlook</div>
+        <div class="tile wide">Calendar</div>
+        <div class="tile">Store</div>
+        <div class="tile">Music</div>
+        <div class="tile">Internet</div>
+        <div class="tile">Camera</div>
+    </div>
+
+    <div id="nav-bar">
+        <div class="nav-btn">←</div>
+        <div class="nav-btn" onclick="goHome()">⊞</div>
+        <div class="nav-btn">🔍</div>
+    </div>
+
+    <script>
+        // 1. Boot Logic
+        setTimeout(() => {
+            document.getElementById('boot-screen').style.display = 'none';
+        }, 3000);
+
+        // 2. Unlock Logic
+        function unlock() {
+            document.getElementById('lock-screen').classList.add('unlocked');
+        }
+
+        // 3. Home Button Logic
+        function goHome() {
+            const lock = document.getElementById('lock-screen');
+            if (lock.classList.contains('unlocked')) {
+                // If already unlocked, just jitter the home screen for effect
+                document.getElementById('home-screen').style.transform = 'scale(0.98)';
+                setTimeout(() => document.getElementById('home-screen').style.transform = 'scale(1)', 100);
+            } else {
+                unlock();
+            }
+        }
+
+        // 4. Update Clock
+        function updateClock() {
+            const now = new Date();
+            const h = now.getHours().toString().padStart(2, '0');
+            const m = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('clock').textContent = `${h}:${m}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
